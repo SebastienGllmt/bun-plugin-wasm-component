@@ -1,0 +1,20 @@
+{
+  "name": "bun-wasm-component-loader",
+  "module": "index.ts",
+  "type": "module",
+  "private": true,
+  "scripts": {
+    "gen-wasm": "jco componentize --wit ./gen-wasm/world.wit --world-name adder --out ./gen-wasm/adder.wasm --disable=all ./gen-wasm/adder.js",
+    "gen-ts": "jco transpile ./gen-wasm/adder.wasm -o ./gen-ts/adder",
+    "dev": "bun run main.ts",
+    "build": "bun run build-and-run"
+  },
+  "devDependencies": {
+    "@bytecodealliance/componentize-js": "^0.19.3",
+    "@bytecodealliance/jco": "^1.15.3",
+    "@types/bun": "^1.3.2"
+  },
+  "peerDependencies": {
+    "typescript": "^5"
+  }
+}
