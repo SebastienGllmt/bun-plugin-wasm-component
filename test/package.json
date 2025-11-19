@@ -1,0 +1,15 @@
+{
+  "name": "bun-plugin-wasm-component-test",
+  "module": "index.ts",
+  "type": "module",
+  "private": true,
+  "scripts": {
+    "dev": "bun run main.ts"
+  },
+  "devDependencies": {
+    "bun-plugin-wasm-component": "../"
+  },
+  "peerDependencies": {
+    "typescript": "^5"
+  }
+}

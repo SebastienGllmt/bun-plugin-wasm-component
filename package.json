@@ -1,20 +1,39 @@
 {
-  "name": "bun-wasm-component-loader",
-  "module": "index.ts",
+  "name": "bun-plugin-wasm-component",
   "type": "module",
-  "private": true,
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/SebastienGllmt/bun-plugin-wasm-component"
+  },
+  "module": "./dist/index.js",
+  "types": "./dist/index.d.ts",
+  "exports": {
+    ".": {
+      "bun": "./src/index.ts",
+      "types": "./dist/index.d.ts",
+      "import": "./dist/index.js"
+    },
+    "./*": {
+      "bun": "./src/*",
+      "import": "./dist/*"
+    }
+  },
+  "license": "MIT",
   "scripts": {
-    "gen-wasm": "jco componentize --wit ./gen-wasm/world.wit --world-name adder --out ./gen-wasm/adder.wasm --disable=all ./gen-wasm/adder.js",
-    "gen-ts": "jco transpile ./gen-wasm/adder.wasm -o ./gen-ts/adder",
-    "dev": "bun run main.ts",
-    "build": "bun run build-and-run"
+    "build": "bun build.ts",
+    "publish": "bun run build && bun publish"
   },
   "devDependencies": {
-    "@bytecodealliance/componentize-js": "^0.19.3",
     "@bytecodealliance/jco": "^1.15.3",
-    "@types/bun": "^1.3.2"
+    "bun-plugin-dtsx": "^0.9.9"
   },
   "peerDependencies": {
     "typescript": "^5"
-  }
+  },
+  "files": [
+    "README.md",
+    "tsconfig.json",
+    "dist",
+    "src"
+  ]
 }
