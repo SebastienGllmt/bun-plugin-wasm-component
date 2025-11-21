@@ -2,8 +2,9 @@ import { plugin, type BunPlugin } from "bun";
 import { $ } from "bun";
 import path from "path";
 import { join, dirname } from "path";
-import { existsSync } from "fs";
+import { existsSync, mkdirSync } from "fs";
 import { write } from "bun";
+import { transpile } from '@bytecodealliance/jco';
 
 function findProjectRoot(start: string) {
   let dir = start;
@@ -55,9 +56,9 @@ function WasmComponentPlugin(options: WasmComponentPluginOptions = {}): BunPlugi
         // TODO: probably best to put all of this in onResolve
         //       but blocked on https://github.com/oven-sh/bun/issues/5314
         // 1) Resolve args.path (despite the fact it's a relative path)
-        const file = Bun.file(args.path);
+        const wasmFileContent = await Bun.file(args.path).arrayBuffer();
         // 2) check if it's a WASM component
-        const kind = detectWasmKind(new Uint8Array(await file.arrayBuffer()));
+        const kind = detectWasmKind(new Uint8Array(wasmFileContent));
         if (kind !== "component") {
           // TODO: this breaks if the user had any other WASM loader plugin
           //       fixed by https://github.com/oven-sh/bun/issues/5303
@@ -68,7 +69,14 @@ function WasmComponentPlugin(options: WasmComponentPluginOptions = {}): BunPlugi
         }
         // 3) generate the type and bindings
         const filename = path.parse(args.path).name;
-        await $`jco transpile ${args.path} -o ./gen-ts/${filename}`;
+        mkdirSync(`./gen-ts/${filename}`, { recursive: true });
+        const transpiledResult = await transpile(wasmFileContent, {
+          name: filename,
+          outDir: `./gen-ts/${filename}`
+        });
+        for (const [key, value] of Object.entries(transpiledResult.files)) {
+          await write(key, value as Uint8Array);
+        }
         const newPath = `./gen-ts/${filename}/${filename}.js`;
         // 4) Patch relative imports
         //    as JS glue contains relative imports
