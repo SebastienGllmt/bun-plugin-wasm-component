@@ -37,7 +37,7 @@ Bun.build({
 # Release
 
 1. `bun install`
-2. `bun run publish`
+2. `bun publish`
 
 # Careful
 

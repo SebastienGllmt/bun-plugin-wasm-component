@@ -1,10 +1,10 @@
 {
-  "version": "1.0.0",
+  "version": "1.0.1",
   "name": "bun-plugin-wasm-component",
   "type": "module",
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/SebastienGllmt/bun-plugin-wasm-component"
+    "url": "git+https://github.com/SebastienGllmt/bun-plugin-wasm-component.git"
   },
   "module": "./dist/index.js",
   "types": "./dist/index.d.ts",
@@ -22,7 +22,7 @@
   "license": "MIT",
   "scripts": {
     "build": "bun build.ts",
-    "publish": "bun run build && bun publish"
+    "prepublishOnly": "bun run build"
   },
   "devDependencies": {
     "@bytecodealliance/jco": "^1.15.3",
